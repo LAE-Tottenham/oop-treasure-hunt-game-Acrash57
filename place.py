@@ -61,7 +61,7 @@ class Map():
         self.next_places.append(place_instance)
 
     def add_item(self, item_instance):
-        self.items += item_instance
+        self.item += item_instance
         pass
 
     def show_next_places(self):

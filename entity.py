@@ -16,7 +16,7 @@ class Entity():
     
 
 class Player(Entity):
-    def __init__(self, given_name, given_health = 100, given_strenght = 2, given_level = 0):
+    def __init__(self, given_name, given_health = 100, given_strenght = 1, given_level = 0):
         super().__init__(given_name, given_health)
         self.level = given_level
         self.strenght = given_strenght
@@ -24,6 +24,7 @@ class Player(Entity):
         self.inventory = []
         self.pos = [0,0]
         self.marker = player_icon
+        
 
     def move(self, x, y):
         self.pos[0] += x 
@@ -38,19 +39,32 @@ class Player(Entity):
         }
     
     def calculate_inventory_size(self):
-        return len(self.inventory)
-
+        x = len(self.inventory)
+        return x 
+    
     def add_item(self, item_instance):
-        if self.calculate_inventory_size() > self.inventory_max_weight:
+        if self.calculate_inventory_size() < self.inventory_max_weight:
             self.inventory.append(item_instance)
         else:
-            print("Your inventory is full...")
+            print("Your inventory is full")
 
     def use_item(self, item_instance):
-        if item_instance.type == "food":
-            self.energy += 50
-        elif item_instance.type == "medicine":
-            self.health += 5
+        item_loop = True
+        while item_loop:
+            if item_instance in self.inventory: 
+                if item_instance == "Food":
+                    self.energy += 50
+                    self.inventory.remove("Food")
+                    item_loop = False
+                elif item_instance == "Health Potion":
+                    self.health += 25
+                    self.inventory.remove("Health Potion")
+                    item_loop = False
+            elif self.calculate_inventory_size() == 0:
+                print("You do not have any items to use")
+                item_loop = False    
+            else:
+                print("You do not have that item")
 
 class Enemy(Entity):
     def __init__(self, given_name, given_damage, given_health):

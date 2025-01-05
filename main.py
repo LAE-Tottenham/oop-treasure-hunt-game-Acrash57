@@ -1,6 +1,6 @@
 from place import Map
 from entity import Player, Enemy
-from weapon import Weapon
+from item import Weapon, Consumables
 from pyfiglet import Figlet
 from termcolor import colored
 import os
@@ -10,10 +10,15 @@ class Game():
     def __init__(self):
         self.current_place = None
     def setup(self):
-        Map1 = Map("First Map", 35, 20)
-        Map1.display_map()
+        map_1 = Map("First Map", 35, 20)
+        shattered_sentinel = Enemy("Shattered Sentinel", 7, 130)
+        rusted_sword = Weapon("Rusted Sword", "Weapon", "Sharp", 5)
+        health_potion = Consumables("Health Potion", "Consumable", "Heal_25")
+        map_1.display_map()
         name = input("Enter player name: ")
         player = Player(name)
+        player.add_item(rusted_sword)
+        player.add_item(health_potion)
         Game.clear()
         Game.start(self) 
     def line():
@@ -25,6 +30,12 @@ class Game():
             print(char, end = "", flush = True )
             time.sleep(0.025)
         print("\n")
+    def fight(self, player, enemy):
+        choice = input("""
+    1. Attack
+    2. Use Item
+    3. Quit Game      
+    """)
     def start(self):
         game_loop = True
         while game_loop:
