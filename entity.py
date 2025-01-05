@@ -1,4 +1,5 @@
 from tile import player_icon
+from item import Consumables, Weapon
 from place import Map
 
 class Entity():
@@ -16,7 +17,7 @@ class Entity():
     
 
 class Player(Entity):
-    def __init__(self, given_name, given_health = 100, given_strenght = 1, given_level = 0):
+    def __init__(self, given_name, given_weapon, given_health = 100, given_strenght = 1, given_level = 0):
         super().__init__(given_name, given_health)
         self.level = given_level
         self.strenght = given_strenght
@@ -24,6 +25,7 @@ class Player(Entity):
         self.inventory = []
         self.pos = [0,0]
         self.marker = player_icon
+        self.weapon = given_weapon
         
 
     def move(self, x, y):
@@ -49,22 +51,25 @@ class Player(Entity):
             print("Your inventory is full")
 
     def use_item(self, item_instance):
-        item_loop = True
-        while item_loop:
-            if item_instance in self.inventory: 
-                if item_instance == "Food":
-                    self.energy += 50
-                    self.inventory.remove("Food")
-                    item_loop = False
-                elif item_instance == "Health Potion":
-                    self.health += 25
-                    self.inventory.remove("Health Potion")
-                    item_loop = False
-            elif self.calculate_inventory_size() == 0:
-                print("You do not have any items to use")
-                item_loop = False    
-            else:
-                print("You do not have that item")
+        if self.calculate_inventory_size() == 0:
+            print("You do not have any items to use")
+            return
+        
+        if item_instance in self.inventory: 
+            if isinstance(item_instance, Weapon):
+                item_instance.use(self)  
+                self.inventory.remove(item_instance)
+            elif isinstance(item_instance, Consumables):
+                item_instance.use(self)  
+                self.inventory.remove(item_instance)
+        else:
+            print("You do not have that item")
+    
+    def attack(self, target):
+        target.health -= self.weapon.damage
+        target.health = max(target.health, 0)
+        print(f"{self.name} has done {self.weapon.damage} damage with the {self.weapon.name}!")
+        print(f"{target.name}'s health is now {target.health}")
 
 class Enemy(Entity):
     def __init__(self, given_name, given_damage, given_health):
