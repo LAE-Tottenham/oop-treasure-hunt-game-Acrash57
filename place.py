@@ -1,4 +1,4 @@
-from tile import Tile, plains, forest, pine, mountain, water
+from tile import Tile, plains, forest, pine, mountain, water, player_icon, enemy_icon
 import random
 import copy
 
@@ -9,6 +9,7 @@ class Map():
         self.height = given_height
         self.next_places = []
         self.items = []
+        self.enemy_list = [] 
         self.generate_map()
         self.generate_patch(2,6,8,forest)
         self.generate_patch(2,5,8,water)
@@ -23,12 +24,18 @@ class Map():
                 row_data.append(plains)
             self.init_map_data.append(row_data)
         self.map_data = copy.deepcopy(self.init_map_data)
-    
-    def update_map(self, pos, marker):
+
+    def update_map(self, pos, marker_player = player_icon, marker_enemy = enemy_icon):
         x, y = pos
         self.map_data = copy.deepcopy(self.init_map_data)
-        self.map_data[y][x] = marker
-
+        self.map_data[y][x] = marker_player
+        for enemy in self.enemy_list:
+            #print(f"Enemy position: {enemy.pos}")  
+            if 0 <= enemy.pos[1] < self.height and 0 <= enemy.pos[0] < self.width:
+                self.map_data[enemy.pos[1]][enemy.pos[0]] = marker_enemy
+            else:
+                pass
+                #print(f"Enemy position {enemy.pos} is out of bounds!") 
     
     def generate_patch(self, given_patch_amount, min_size, max_size, tile: Tile, irr = True):
         for _ in range(given_patch_amount):
