@@ -17,13 +17,15 @@ class Entity():
     
 
 class Player(Entity):
-    def __init__(self, given_name, given_weapon, given_health = 100, given_strenght = 1, given_level = 0):
+    def __init__(self, given_name, given_weapon, given_health = 100, given_strenght = 1, given_level = 0, given_energy = 100):
         super().__init__(given_name, given_health)
         self.level = given_level
         self.strenght = given_strenght
+        self.energy = given_energy
         self.inventory_max_weight = 25
         self.inventory = []
         self.pos = [0,0]
+        self.money = 75
         self.marker = player_icon
         self.weapon = given_weapon
         
@@ -72,9 +74,10 @@ class Player(Entity):
         print(f"{target.name}'s health is now {target.health}")
 
 class Enemy(Entity):
-    def __init__(self, given_name, given_damage, given_health):
+    def __init__(self, given_name, given_damage, given_health, given_boss_status = False):
         super().__init__(given_name, given_health)
         self.damage = given_damage
+        self.boss_status = given_boss_status
     
 
 

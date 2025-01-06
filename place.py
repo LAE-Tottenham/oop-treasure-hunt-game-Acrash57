@@ -27,7 +27,7 @@ class Map():
     def update_map(self, pos, marker):
         x, y = pos
         self.map_data = copy.deepcopy(self.init_map_data)
-        self.map_data[y][x] = marker.colored_symbol
+        self.map_data[y][x] = marker
 
     
     def generate_patch(self, given_patch_amount, min_size, max_size, tile: Tile, irr = True):
@@ -52,7 +52,7 @@ class Map():
     def display_map(self):
         frame = self.width * "-" + '--'
         print(frame)
-        for row in self.init_map_data:
+        for row in self.map_data:
             row_tiles = [tile.symbol for tile in row]
             print("|" + "".join(row_tiles) + "|")
         print(frame)

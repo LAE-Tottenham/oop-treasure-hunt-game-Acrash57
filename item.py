@@ -1,12 +1,13 @@
 
 class Item():
-    def __init__(self, given_name, given_type):
+    def __init__(self, given_name, given_type, given_value):
         self.name = given_name
         self.type = given_type
-    
+        self.value - given_value
+
 class Weapon(Item):
-    def __init__(self, given_name, given_type, given_weapon_type, given_damage):
-        super().__init__(given_name, given_type)
+    def __init__(self, given_name, given_type, given_weapon_type, given_damage, given_value):
+        super().__init__(given_name, given_type, given_value)
         self.weapon_type = given_weapon_type
         self.damage = given_damage
     
@@ -18,8 +19,8 @@ class Weapon(Item):
     
 
 class Consumables(Item):
-    def __init__(self, given_name, given_type, given_effect):
-        super().__init__(given_name,given_type)
+    def __init__(self, given_name, given_type, given_effect, given_value):
+        super().__init__(given_name,given_type, given_value)
         self.effect = given_effect
     
     def use(self, player):
