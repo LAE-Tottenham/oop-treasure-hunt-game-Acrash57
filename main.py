@@ -34,7 +34,7 @@ class Game():
         self.energy_drink = None  
         self.superior_health_potion = None  
         self.energy_pack = None
-        self.shop_items = [self.health_potion, self.energy_bar, self.katana, self.scythe, self.short_bow, self.crossbow, self.long_bow, self.long_sword, self.throwing_knife, self.staff, self.magic_wand, self.crowdbreaker, self.ethereal_reaper, self.pheonix_bow, self.staff_of_dominion, self.large_health_potion, self.energy_drink, self.superior_health_potion, self.energy_pack]
+        self.shop_items = None
         self.map_1 = None
 
     def setup(self):
@@ -89,6 +89,7 @@ class Game():
         self.energy_drink = energy_drink
         self.superior_health_potion = superior_health_potion
         self.energy_pack = energy_pack
+        self.shop_items = [self.health_potion, self.energy_bar, self.katana, self.scythe, self.short_bow, self.crossbow, self.long_bow, self.long_sword, self.throwing_knife, self.staff, self.magic_wand, self.crowdbreaker, self.ethereal_reaper, self.pheonix_bow, self.staff_of_dominion, self.large_health_potion, self.energy_drink, self.superior_health_potion, self.energy_pack]
         name = input("Enter player name: ")
         player = Player(name, rusted_sword)
         self.player = player
@@ -107,6 +108,7 @@ class Game():
         self.map_1.update_map(player.pos)
         self.map_1.display_map()
         #Game.clear()
+        #Game.shop(self)
         Game.start(self)
 
     def move(self, maps):
@@ -170,12 +172,14 @@ class Game():
                 while choice_loop1:
                     if choice1 == "1":
                         Game.clear()
+                        Game.line()
                         self.player.attack(enemy)
                         enemy.attack(self.player)
-                        print(self.player.energy)
                     choice_loop1 = False
                 while choice_loop2:
                     if choice1 == "2":
+                        Game.clear()
+                        Game.line()
                         if self.player.calculate_inventory_size() == 0:
                             print("You have no items in your inventory, you cannot use item")
                             choice_loop2 = False
@@ -186,6 +190,7 @@ class Game():
                         while check:
                             choice2 = input("What item would you like to use: ")
                             try:
+                                Game.clear()
                                 self.player.use_item(self.player.inventory[int(choice2) - 1])
                                 choice_loop2 = False
                                 check = False
@@ -194,6 +199,8 @@ class Game():
                     choice_loop2 = False
 
                 if enemy.health == 0:
+                    Game.clear()
+                    Game.line()
                     print(f"The boss {enemy.name} has been defeated congratulations!")
                     if enemy.boss_status == True:
                         self.player.essence += 1
@@ -207,6 +214,8 @@ class Game():
                     self.shop()
         
                 elif self.player.health == 0:
+                    Game.clear()
+                    Game.line()
                     print(f"The {enemy.name} has defeated {self.player.name}")
                     f = Figlet(font="slant")
                     x = f.renderText("Game Over")
@@ -227,12 +236,14 @@ class Game():
                 while choice_loop1:
                     if choice1 == "1":
                         Game.clear()
+                        Game.line()
                         self.player.attack(enemy)
                         enemy.attack(self.player)
-                        print(self.player.energy)
                     choice_loop1 = False
                 while choice_loop2:
                     if choice1 == "2":
+                        Game.clear()
+                        Game.line()
                         if self.player.calculate_inventory_size() == 0:
                             print("You have no items in your inventory, you cannot use item")
                             choice_loop2 = False
@@ -243,6 +254,7 @@ class Game():
                         while check:
                             choice2 = input("What item would you like to use: ")
                             try:
+                                Game.clear()
                                 self.player.use_item(self.player.inventory[int(choice2) - 1])
                                 choice_loop2 = False
                                 check = False
@@ -251,24 +263,30 @@ class Game():
                     choice_loop2 = False
                 while choice_loop3:
                     if choice1 == '3':
+                        Game.clear()
+                        Game.line()
                         print(f"{self.player.name} has fled from {enemy.name}")
                         fight_loop = False
                         choice_loop3 = False
 
                 if enemy.health == 0:
+                    Game.clear()
+                    Game.line()
                     print(f"The boss {enemy.name} has been defeated congratulations!")
                     if enemy.boss_status == True:
                         self.player.essence += 1
                         self.player.level_up()
-                        print(f"{self.player.name} collect the bounty on {enemy.name} and recieve 75 coins")
+                        print(f"{self.player.name} collect the bounty on {enemy.name} and recieved 75 coins")
                         self.player.money += 75
-                    print(f"{self.player.name} finds 4 coins on the enemy")
+                    print(f"{self.player.name} found 4 coins on the enemy")
                     self.player.money += 5
                     self.player.health = self.player.max_health
                     self.player.energy = self.player.max_energy
                     self.shop() 
 
                 elif self.player.health == 0:
+                    Game.clear()
+                    Game.line()
                     print(f"The {enemy.name} has defeated {self.player.name}")
                     f = Figlet(font="slant")
                     x = f.renderText("Game Over")
@@ -278,6 +296,8 @@ class Game():
 
     def shop(self):
             shop_loop = True
+            time.sleep(3)
+            Game.clear()
             while shop_loop:
                 print("You have the chance to buy and sell items in the shop")
                 shop_choice = input("""
@@ -286,16 +306,17 @@ class Game():
 3. Exit    
 """)
                 if shop_choice == '1':
-                    print("The shop's items:")
                     print(f"{self.player.name} has {self.player.money} coins")
+                    print("The shop's items:")
                     for index, item in enumerate(self.shop_items, start = 1):
+                        time.sleep(0.025)
                         print(f"{index}. {item.name} - Price = {item.value}")
                     check1 = True
                     while check1:
                         item_choice = input("What item would you like to buy: ")
                         try:
                             self.player.add_item(self.shop_items[int(item_choice) - 1])
-                            self.player.money -= self.shop_items[int(item_choice - 1)].value
+                            self.player.money -= self.shop_items[int(item_choice) - 1].value
                             check1 = False
                         except ValueError:
                             print("Please input the number corresponding to the item you want to buy")
@@ -308,9 +329,10 @@ class Game():
                     while check2:
                         item_sell_choice = input("What item would you like to sell: ")
                         try:
-                            self.player.remove_item(self.player.inventory[int(item_sell_choice) - 1])
-                            item_selling_price = self.inventory[int(item_sell_choice)]
-                            print(f"{self.player.name} has gain {item_selling_price.value}")
+                            self.player.remove_item(self.player.inventory[int(item_sell_choice)])
+                            item_selling_price = self.player.inventory[int(item_sell_choice)]
+                            print(f"{item_selling_price.value} {item_selling_price.name}")
+                            print(f"{self.player.name} has gained {item_selling_price.value} coins")
                             self.player.money += item_selling_price.value
                             check2 = False
                         except ValueError:

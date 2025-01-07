@@ -15,7 +15,7 @@ class Weapon(Item):
         player.current_weapon = self
         print(f"You equip the weapon {self.name}")
         print(f"Its damage is: {self.damage} per attack")
-        print(f"Its type is {self.weapon_type}")
+        print(f"Its type is: {self.weapon_type}")
     
 
 class Consumables(Item):
