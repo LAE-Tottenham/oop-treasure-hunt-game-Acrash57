@@ -6,6 +6,7 @@ ANSI_RED = "\033[31m"
 ANSI_WHITE = "\033[97m"
 ANSI_MAGENTA = "\033[35m"
 ANSI_CYAN = "\033[36m"
+ANSI_GREY = "\033[90m"
 
 class Tile():
     def __init__(self, symbol, colour, coloured = True):
@@ -14,7 +15,7 @@ class Tile():
 plains = Tile(".", ANSI_GREEN)  
 forest = Tile("T", ANSI_GREEN)  
 pine = Tile("P", ANSI_CYAN)  
-mountain = Tile("#", ANSI_WHITE)  
+mountain = Tile("#", ANSI_GREY)  
 water = Tile("~", ANSI_BLUE)  
 player_icon = Tile("X", ANSI_MAGENTA)
 enemy_icon = Tile("E", ANSI_RED)

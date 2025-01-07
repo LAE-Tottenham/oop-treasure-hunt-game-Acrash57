@@ -63,6 +63,7 @@ class Map():
             row_tiles = [tile.symbol for tile in row]
             print("|" + "".join(row_tiles) + "|")
         print(frame)
+        print(f"{plains.symbol} = Plain, {mountain.symbol} = Mountain, {forest.symbol} = Forest, {pine.symbol} = Pine, {water.symbol} = Water, {player_icon.symbol} = You, {enemy_icon.symbol} = Enemy")
 
     def add_next_place(self, place_instance):
         self.next_places.append(place_instance)

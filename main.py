@@ -8,7 +8,7 @@ import time
 
 class Game():
     def __init__(self):
-        self.current_place = None
+        self.last_move = None
         self.player = None
         self.sentinel = None
         self.rat = None
@@ -90,7 +90,15 @@ class Game():
         self.superior_health_potion = superior_health_potion
         self.energy_pack = energy_pack
         self.shop_items = [self.health_potion, self.energy_bar, self.katana, self.scythe, self.short_bow, self.crossbow, self.long_bow, self.long_sword, self.throwing_knife, self.staff, self.magic_wand, self.crowdbreaker, self.ethereal_reaper, self.pheonix_bow, self.staff_of_dominion, self.large_health_potion, self.energy_drink, self.superior_health_potion, self.energy_pack]
+        check = True
         name = input("Enter player name: ")
+        while check:
+            if name == '':
+                Game.clear() 
+                print("Please input a valid name!")
+                name = input("Enter player name: ")
+            else:
+                check = False
         player = Player(name, rusted_sword)
         self.player = player
         player.add_item(rusted_sword)
@@ -108,7 +116,6 @@ class Game():
         self.map_1.update_map(player.pos)
         self.map_1.display_map()
         #Game.clear()
-        #Game.shop(self)
         Game.start(self)
 
     def move(self, maps):
@@ -134,9 +141,14 @@ class Game():
                 self.player.move(-1, 0)
             elif move == "D" and self.player.pos[0] < maps.width - 1:
                 self.player.move(1, 0)
+            
+            for enemy in map.enemy_list:
+                if enemy.pos == self.player.pos:
+                    self.fight(enemy)
             else:
                 print("Invalid move!")
 
+            self.last_move = self.player.pos
             maps.update_map(self.player.pos)
     
     def add_enemy(self, enemy, map):
@@ -329,10 +341,10 @@ class Game():
                     while check2:
                         item_sell_choice = input("What item would you like to sell: ")
                         try:
-                            self.player.remove_item(self.player.inventory[int(item_sell_choice)])
-                            item_selling_price = self.player.inventory[int(item_sell_choice)]
+                            item_selling_price = self.player.inventory[int(item_sell_choice) - 1]
                             print(f"{item_selling_price.value} {item_selling_price.name}")
                             print(f"{self.player.name} has gained {item_selling_price.value} coins")
+                            self.player.remove_item(self.player.inventory[int(item_sell_choice)])
                             self.player.money += item_selling_price.value
                             check2 = False
                         except ValueError:

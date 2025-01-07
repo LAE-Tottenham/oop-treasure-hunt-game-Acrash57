@@ -103,7 +103,7 @@ class Enemy(Entity):
     def __init__(self, given_name, given_damage, given_health, given_boss_status = False):
         super().__init__(given_name, given_health)
         self.damage = given_damage
-        self.pos = [random.randint(0, 34), random.randint(0, 19)]
+        self.pos = [random.randint(2, 34), random.randint(1, 19)]
         self.boss_status = given_boss_status
     
 
