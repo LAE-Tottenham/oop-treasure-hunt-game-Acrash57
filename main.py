@@ -43,7 +43,7 @@ class Game():
         rat = Enemy("Rat", 2, 50)
         goblin = Enemy("Globin", 3, 35)
         slime = Enemy("Slime", 2, 40)
-        wolf = Enemy("Wolf", 2, 20)
+        wolf = Enemy("Wolf", 4, 65)
         shattered_sentinel = Enemy("Shattered Sentinel", 6, 120, True)
         self.sentinel = shattered_sentinel
         rusted_sword = Weapon("Rusted Sword", "Weapon", "Sharp", 5, 2)
@@ -58,10 +58,10 @@ class Game():
         throwing_knife = Weapon("Throwing Knifes", "Weapon", "Ranged", 15, 40)
         staff = Weapon("Staff", "Weapon", "Magical", 20, 50)
         magic_wand = Weapon("Magic Wand", "Weapon", "Magical", 23, 55)
-        crowdbreaker_blade = Weapon("Crowdbreaker Blade", "Weapon", "Sharp", 55, 125)
-        ethereal_reaper = Weapon("Ethereal Reaper", "Weapon", "Sharp", 65, 150)
-        pheonix_bow = Weapon("Phoenix Bow", "Weapon", "Ranged", 60, 135)
-        staff_of_dominion = Weapon("Staff Of Dominion", "Weapon",  "Magical", 40, 75)
+        crowdbreaker_blade = Weapon("Crowdbreaker Blade", "Weapon", "Sharp", 55, 145)
+        ethereal_reaper = Weapon("Ethereal Reaper", "Weapon", "Sharp", 65, 185)
+        pheonix_bow = Weapon("Phoenix Bow", "Weapon", "Ranged", 60, 155)
+        staff_of_dominion = Weapon("Staff Of Dominion", "Weapon",  "Magical", 40, 125)
         large_health_potion = Consumables("Health Potion", "Consumable", "Heal_50", 25)
         energy_drink = Consumables("Energy Drink", "Consumable", "Ener_50", 25)
         superior_health_potion = Consumables("Superior Health Potion", "Consumable", "Heal_100", 55)
@@ -115,6 +115,9 @@ class Game():
         self.add_enemy(wolf, map_1)
         self.map_1.update_map(player.pos)
         self.map_1.display_map()
+        self.shop() 
+        #self.move(self.map_1)
+        #self.move(self.map_1)
         #Game.clear()
         Game.start(self)
 
@@ -129,8 +132,9 @@ class Game():
             
             move = input("Move (W/A/S/D to move, Q to leave the map): ").upper()
             if move == "Q":
-                print("Exiting the map.")
+                print(f"{self.player.name} has left {maps.name}")
                 self.player.pos = [0,0]
+                maps.update_map(self.player.pos)
                 break
 
             if move == "W" and self.player.pos[1] > 0:
@@ -142,17 +146,29 @@ class Game():
             elif move == "D" and self.player.pos[0] < maps.width - 1:
                 self.player.move(1, 0)
             
-            for enemy in map.enemy_list:
+            for enemy in maps.enemy_list:
                 if enemy.pos == self.player.pos:
+                    Game.clear()
+                    print(f"{self.player.name} has encountered a {enemy.name}!")
+                    time.sleep(2)
                     self.fight(enemy)
+                    if enemy.health == 0:
+                        self.remove_enemy(enemy, maps)
+                    else:
+                        self.player.pos = self.last_move
+
             else:
                 print("Invalid move!")
 
             self.last_move = self.player.pos
+            print(self.last_move)
             maps.update_map(self.player.pos)
     
     def add_enemy(self, enemy, map):
         map.enemy_list.append(enemy)
+
+    def remove_enemy(self, enemy, map):
+        map.enemy_list.remove(enemy)
 
 
     def line():
@@ -193,7 +209,7 @@ class Game():
                         Game.clear()
                         Game.line()
                         if self.player.calculate_inventory_size() == 0:
-                            print("You have no items in your inventory, you cannot use item")
+                            print("You have no items in your inventory, you cannot use items")
                             choice_loop2 = False
                         print(f"{self.player.name}'s inventory")
                         for index, item in enumerate(self.player.inventory, start = 1):
@@ -219,8 +235,9 @@ class Game():
                         self.player.level_up()
                         print(f"{self.player.name} collect the bounty on {enemy.name} and recieve 75 coins")
                         self.player.money += 75
-                    print(f"{self.player.name} finds 4 coins on the enemy")
-                    self.player.money += 5
+                    else:
+                        print(f"{self.player.name} finds 5 coins on the {enemy.name}")
+                        self.player.money += 5
                     self.player.health = self.player.max_health
                     self.player.energy = self.player.max_energy
                     self.shop()
@@ -257,7 +274,7 @@ class Game():
                         Game.clear()
                         Game.line()
                         if self.player.calculate_inventory_size() == 0:
-                            print("You have no items in your inventory, you cannot use item")
+                            print("You have no items in your inventory, you cannot use items")
                             choice_loop2 = False
                         print(f"{self.player.name}'s inventory")
                         for index, item in enumerate(self.player.inventory, start = 1):
@@ -280,21 +297,18 @@ class Game():
                         print(f"{self.player.name} has fled from {enemy.name}")
                         fight_loop = False
                         choice_loop3 = False
+                    choice_loop3 = False
 
                 if enemy.health == 0:
                     Game.clear()
                     Game.line()
-                    print(f"The boss {enemy.name} has been defeated congratulations!")
-                    if enemy.boss_status == True:
-                        self.player.essence += 1
-                        self.player.level_up()
-                        print(f"{self.player.name} collect the bounty on {enemy.name} and recieved 75 coins")
-                        self.player.money += 75
-                    print(f"{self.player.name} found 4 coins on the enemy")
+                    print(f"The {enemy.name} has been defeated congratulations!")
+                    print(f"{self.player.name} found 5 coins on the enemy")
                     self.player.money += 5
                     self.player.health = self.player.max_health
                     self.player.energy = self.player.max_energy
                     self.shop() 
+                    fight_loop = False
 
                 elif self.player.health == 0:
                     Game.clear()
@@ -327,11 +341,24 @@ class Game():
                     while check1:
                         item_choice = input("What item would you like to buy: ")
                         try:
-                            self.player.add_item(self.shop_items[int(item_choice) - 1])
-                            self.player.money -= self.shop_items[int(item_choice) - 1].value
-                            check1 = False
+                            if self.shop_items[int(item_choice) - 1].value > self.player.money:
+                                Game.clear() 
+                                print(f"{self.player.name} doesn't have enough money for the {self.shop_items[int(item_choice) - 1].name}")
+                                time.sleep(2) 
+                                Game.clear() 
+                                continue
+                            else:
+                                Game.clear()
+                                self.player.add_item(self.shop_items[int(item_choice) - 1])
+                                self.player.money -= self.shop_items[int(item_choice) - 1].value
+                                print(f"{self.player.name} has purchased {self.shop_items[int(item_choice) - 1].name} from the shop for {self.shop_items[int(item_choice) - 1].value} coins!")
+                                time.sleep(2)
+                                Game.clear() 
+                                check1 = False
                         except ValueError:
                             print("Please input the number corresponding to the item you want to buy")
+                        except IndexError:
+                            print("Please choose a item within the numbered item list")
 
                 if shop_choice == '2':
                     print(f"Your inventory:")
