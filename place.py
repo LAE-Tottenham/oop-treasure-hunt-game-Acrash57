@@ -1,4 +1,4 @@
-from tile import Tile, plains, forest, pine, mountain, water, player_icon, enemy_icon
+from tile import Tile, plains, forest, pine, mountain, water, player_icon, enemy_icon, item_icon
 import random
 import copy
 
@@ -9,11 +9,13 @@ class Map():
         self.height = given_height
         self.next_places = []
         self.items = []
-        self.enemy_list = [] 
+        self.enemy_list = []
+        self.map_items = None
+        self.final_map_items = None
         self.generate_map()
         self.generate_patch(2,6,8,forest)
         self.generate_patch(2,5,8,water)
-        self.generate_patch(2,6,10,mountain)
+        self.generate_patch(2,7,10,mountain)
         self.generate_patch(3,6,6,pine)
      
     def generate_map(self):
@@ -25,18 +27,28 @@ class Map():
             self.init_map_data.append(row_data)
         self.map_data = copy.deepcopy(self.init_map_data)
 
-    def update_map(self, pos, marker_player = player_icon, marker_enemy = enemy_icon):
+    def update_map(self, pos, marker_player = player_icon, marker_enemy = enemy_icon, marker_item = item_icon):
         x, y = pos
         self.map_data = copy.deepcopy(self.init_map_data)
         self.map_data[y][x] = marker_player
         for enemy in self.enemy_list:
-            #print(f"Enemy position: {enemy.pos}")  
-            if 0 <= enemy.pos[1] < self.height and 0 <= enemy.pos[0] < self.width:
-                self.map_data[enemy.pos[1]][enemy.pos[0]] = marker_enemy
-            else:
-                pass
-                #print(f"Enemy position {enemy.pos} is out of bounds!") 
-    
+            self.map_data[enemy.pos[1]][enemy.pos[0]] = marker_enemy
+        for item in self.final_map_items:
+            print(item.pos) 
+            self.map_data[item.pos[1]][item.pos[0]] = marker_item
+
+    def get_items(self):
+        item_weights = [50, 50, 30, 30, 15, 15, 5, 5]
+        x = random.choices(self.map_items, weights=item_weights, k=3)
+        
+        for item in x:
+            item.set_position()
+            print(f"Position of {item.name}: {item.pos}")
+        
+        self.final_map_items = copy.deepcopy(x)  
+        return self.final_map_items
+        
+
     def generate_patch(self, given_patch_amount, min_size, max_size, tile: Tile, irr = True):
         for _ in range(given_patch_amount):
             width = random.randint(min_size, max_size)
@@ -63,14 +75,11 @@ class Map():
             row_tiles = [tile.symbol for tile in row]
             print("|" + "".join(row_tiles) + "|")
         print(frame)
-        print(f"{plains.symbol} = Plain, {mountain.symbol} = Mountain, {forest.symbol} = Forest, {pine.symbol} = Pine, {water.symbol} = Water, {player_icon.symbol} = You, {enemy_icon.symbol} = Enemy")
+        print(f"{plains.symbol} = Plain, {mountain.symbol} = Mountain, {forest.symbol} = Forest, {pine.symbol} = Pine, {water.symbol} = Water, {player_icon.symbol} = You, {enemy_icon.symbol} = Enemy, {item_icon.symbol} = Chest")
 
     def add_next_place(self, place_instance):
         self.next_places.append(place_instance)
 
-    def add_item(self, item_instance):
-        self.item += item_instance
-        pass
 
     def show_next_places(self):
         print("The possible places you can go to are: ")

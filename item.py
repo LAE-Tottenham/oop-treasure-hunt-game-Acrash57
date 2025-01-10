@@ -1,15 +1,24 @@
-
+import random
 class Item():
     def __init__(self, given_name, given_type, given_value):
         self.name = given_name
         self.type = given_type
         self.value = given_value
+        self.pos_set = False  
 
+    def set_position(self):
+        if not self.pos_set:  
+            self.pos = [random.randint(2, 34), random.randint(1, 19)]
+            self.pos_set = True  
+
+        
 class Weapon(Item):
     def __init__(self, given_name, given_type, given_weapon_type, given_damage, given_value):
         super().__init__(given_name, given_type, given_value)
         self.weapon_type = given_weapon_type
         self.damage = given_damage
+
+
     
     def use(self, player):
         player.current_weapon = self
@@ -20,7 +29,7 @@ class Weapon(Item):
 
 class Consumables(Item):
     def __init__(self, given_name, given_type, given_effect, given_value):
-        super().__init__(given_name,given_type, given_value)
+        super().__init__(given_name, given_type, given_value)
         self.effect = given_effect
     
     def use(self, player):

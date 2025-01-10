@@ -35,6 +35,7 @@ class Game():
         self.superior_health_potion = None  
         self.energy_pack = None
         self.shop_items = None
+        self.map_items = None
         self.map_1 = None
 
     def setup(self):
@@ -58,7 +59,7 @@ class Game():
         throwing_knife = Weapon("Throwing Knifes", "Weapon", "Ranged", 15, 40)
         staff = Weapon("Staff", "Weapon", "Magical", 20, 50)
         magic_wand = Weapon("Magic Wand", "Weapon", "Magical", 23, 55)
-        crowdbreaker_blade = Weapon("Crowdbreaker Blade", "Weapon", "Sharp", 55, 145)
+        crownbreaker_blade = Weapon("Crownbreaker Blade", "Weapon", "Sharp", 55, 145)
         ethereal_reaper = Weapon("Ethereal Reaper", "Weapon", "Sharp", 65, 185)
         pheonix_bow = Weapon("Phoenix Bow", "Weapon", "Ranged", 60, 155)
         staff_of_dominion = Weapon("Staff Of Dominion", "Weapon",  "Magical", 40, 125)
@@ -81,7 +82,7 @@ class Game():
         self.throwing_knife = throwing_knife
         self.staff = staff
         self.magic_wand = magic_wand
-        self.crowdbreaker = crowdbreaker_blade
+        self.crownbreaker = crownbreaker_blade
         self.ethereal_reaper = ethereal_reaper
         self.pheonix_bow = pheonix_bow
         self.staff_of_dominion = staff_of_dominion
@@ -89,7 +90,8 @@ class Game():
         self.energy_drink = energy_drink
         self.superior_health_potion = superior_health_potion
         self.energy_pack = energy_pack
-        self.shop_items = [self.health_potion, self.energy_bar, self.katana, self.scythe, self.short_bow, self.crossbow, self.long_bow, self.long_sword, self.throwing_knife, self.staff, self.magic_wand, self.crowdbreaker, self.ethereal_reaper, self.pheonix_bow, self.staff_of_dominion, self.large_health_potion, self.energy_drink, self.superior_health_potion, self.energy_pack]
+        self.shop_items = [self.health_potion, self.energy_bar, self.katana, self.scythe, self.short_bow, self.crossbow, self.long_bow, self.long_sword, self.throwing_knife, self.staff, self.magic_wand, self.crownbreaker, self.ethereal_reaper, self.pheonix_bow, self.staff_of_dominion, self.large_health_potion, self.energy_drink, self.superior_health_potion, self.energy_pack]
+        self.map_items = [self.health_potion, self.energy_bar, self.large_health_potion, self.energy_drink, self.katana, self.short_bow, self.staff_of_dominion, self.crownbreaker]
         check = True
         name = input("Enter player name: ")
         while check:
@@ -113,22 +115,24 @@ class Game():
         self.add_enemy(slime, map_1)
         self.add_enemy(goblin, map_1)
         self.add_enemy(wolf, map_1)
+        self.add_items(map_1)
+        map_1.get_items() 
         self.map_1.update_map(player.pos)
-        self.map_1.display_map()
-        self.shop() 
-        #self.move(self.map_1)
-        #self.move(self.map_1)
+        #self.shop() 
+        self.move(self.map_1)
         #Game.clear()
         Game.start(self)
 
     def move(self, maps):
         while True:
-            os.system("clear")
-
-            print(f"Explore {maps.name}")
+            #os.system("clear")
+            print("============================")
+            print(f"|Explore {maps.name}|")
+            print(f"============================\n")
             maps.display_map()
 
             print(f"Player's current position: {self.player.pos}")
+            self.last_move = self.player.pos[:]
             
             move = input("Move (W/A/S/D to move, Q to leave the map): ").upper()
             if move == "Q":
@@ -137,15 +141,25 @@ class Game():
                 maps.update_map(self.player.pos)
                 break
 
+
             if move == "W" and self.player.pos[1] > 0:
                 self.player.move(0, -1)
+                
             elif move == "S" and self.player.pos[1] < maps.height - 1:
                 self.player.move(0, 1)
+
+                
             elif move == "A" and self.player.pos[0] > 0:
                 self.player.move(-1, 0)
+
+                
             elif move == "D" and self.player.pos[0] < maps.width - 1:
                 self.player.move(1, 0)
+
+            else:
+                print("Invalid move!")
             
+    
             for enemy in maps.enemy_list:
                 if enemy.pos == self.player.pos:
                     Game.clear()
@@ -155,13 +169,23 @@ class Game():
                     if enemy.health == 0:
                         self.remove_enemy(enemy, maps)
                     else:
-                        self.player.pos = self.last_move
+                        self.player.pos = self.last_move[:]
+            
+            for item in maps.final_map_items:
+                if item.pos == self.player.pos:
+                    Game.clear()
+                    print(f"{self.player.name} has discovered a chest and uncovered a {item.name}")
+                    choice = input("""
+        1. Take Item
+        2. Leave Item     
+        """)
+                    if choice == '1':
+                        pass
+                    elif choice == '2':
+                        pass
+                    else:
+                        pass
 
-            else:
-                print("Invalid move!")
-
-            self.last_move = self.player.pos
-            print(self.last_move)
             maps.update_map(self.player.pos)
     
     def add_enemy(self, enemy, map):
@@ -169,7 +193,9 @@ class Game():
 
     def remove_enemy(self, enemy, map):
         map.enemy_list.remove(enemy)
-
+    
+    def add_items(self, maps):
+        maps.map_items = self.map_items
 
     def line():
         print("-------------------------------------------------------")
@@ -294,7 +320,8 @@ class Game():
                     if choice1 == '3':
                         Game.clear()
                         Game.line()
-                        print(f"{self.player.name} has fled from {enemy.name}")
+                        print(f"{self.player.name} was able to escape the {enemy.name}")
+                        time.sleep(2) 
                         fight_loop = False
                         choice_loop3 = False
                     choice_loop3 = False
