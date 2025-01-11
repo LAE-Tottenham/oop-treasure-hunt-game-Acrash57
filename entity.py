@@ -37,7 +37,7 @@ class Player(Entity):
         self.level += 1
         self.strength += 1
         self.max_health += 25
-        self.max_energy += 25
+        self.max_energy += 5
 
     def move(self, x, y):
         self.pos[0] += x 
@@ -72,7 +72,7 @@ class Player(Entity):
         if item_instance in self.inventory: 
             if isinstance(item_instance, Weapon):
                 item_instance.use(self)  
-                self.inventory.remove(item_instance)
+                self.weapon = item_instance
             elif isinstance(item_instance, Consumables):
                 item_instance.use(self)  
                 self.inventory.remove(item_instance)
@@ -80,7 +80,7 @@ class Player(Entity):
             print("You do not have that item")
     
     def attack(self, target):
-        if self.energy > 30:
+        if self.energy > 50:
             self.energy = max(self.energy, 0)
             self.energy -= 3
             total_dmg = self.weapon.damage + self.strength
@@ -88,7 +88,7 @@ class Player(Entity):
             target.health = max(target.health, 0)
             print(f"{self.name} has done {total_dmg} damage with the {self.weapon.name}!")
             print(f"{target.name}'s health is now {target.health}")
-        elif self.energy < 30:
+        elif self.energy < 50:
             self.energy = max(self.energy, 0)
             self.energy -= 4
             print(f"Your energy {self.energy} and low affecting your damage output!")

@@ -34,7 +34,6 @@ class Map():
         for enemy in self.enemy_list:
             self.map_data[enemy.pos[1]][enemy.pos[0]] = marker_enemy
         for item in self.final_map_items:
-            print(item.pos) 
             self.map_data[item.pos[1]][item.pos[0]] = marker_item
 
     def get_items(self):
