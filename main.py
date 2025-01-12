@@ -559,7 +559,7 @@ class Game():
         game_loop = True
         while game_loop:
             f = Figlet(font="slant")
-            x = f.renderText("Welcome To Forgetten Realm!")
+            x = f.renderText("Welcome To Forgotten Realm!")
             y = colored(x, "red" , attrs=['bold'])
             print(y)
             Game.line()
