@@ -1,0 +1,4 @@
+Install pyfiglet and termcolor
+------------------------------
+pip install pyfiglet
+pip install termcolor
