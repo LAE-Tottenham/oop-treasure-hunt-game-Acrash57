@@ -42,8 +42,7 @@ class Map():
         
         for item in x:
             item.set_position()
-            print(f"Position of {item.name}: {item.pos}")
-        
+    
         self.final_map_items = copy.deepcopy(x)  
         return self.final_map_items
         

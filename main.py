@@ -401,9 +401,9 @@ class Game():
                     self.player.level_up()
                     print(f"{self.player.name} has gained 1 kings essence")
                     print(f"{self.player.name} has {self.player.essence} kings fragment")
-                    print(f"{self.player.name} looted 75 coins off {enemy.name}")
-                    time.sleep(2) 
-                    self.player.money += 75
+                    print(f"{self.player.name} looted 50 coins off {enemy.name}")
+                    time.sleep(5) 
+                    self.player.money += 50
                     self.player.health = self.player.max_health
                     self.player.energy = self.player.max_energy
                     fight_loop = False
@@ -693,6 +693,7 @@ class Game():
                                         Game.slow_print(txt7)
                                         time.sleep(2) 
                                         Game.print_end()
+                                        print(f"The Saviour {self.player.name} stats:")
                                         quit() 
 
                                     if choice4 == '2':
@@ -702,15 +703,21 @@ class Game():
                                         Game.slow_print(txt8)
                                         time.sleep(2) 
                                         Game.print_end()
+                                        Game.line() 
+                                        print(f"The King {self.player.name} stats:")
+                                        self.print_stats() 
                                         quit()
                             else:
                                 txt9 = "You stand before King Aetheris, but you are incomplete. A piece of the King's Essence remains just out of reach, its glow beckoning you forward. You are not whole, King Aetheris says solemnly. You lack the final two pieces, and yet you seek the power of the ancients. There is no path forward without it. King Aetheris raises his hand, guarding the an essence.\nThere is no room for negotiation—only one path remains: combat."
                                 Game.slow_print(txt9)
                                 self.fight(self.aetheris)
-                                txt10 = "You have taken the essence,  King Aetheris whispers with his final breath, but the realm will never be the same, you lack the final piece. As you absorb the essences you collected, the power surges within you. But the realm cracks and trembles, broken as you are. The old kings are gone, and you are left to rule a shattered kingdom, one that reflects the fractured soul now in power.\nThe future is yours, but it is a world left in ruin, and your reign begins in the aftermath of chaos."
+                                txt10 = "You have taken the essence, King Aetheris whispers with his final breath, but the realm will never be the same, you lack the final piece. As you absorb the essences you collected, the power surges within you. But the realm cracks and trembles, broken as you are. The old kings are gone, and you are left to rule a shattered kingdom, one that reflects the fractured soul now in power.\nThe future is yours, but it is a world left in ruin, and your reign begins in the aftermath of chaos."
                                 Game.slow_print(txt10)
                                 time.sleep(2) 
                                 Game.print_end()
+                                Game.line() 
+                                print(f"The Shattered Ruler {self.player.name} stats:")
+                                self.print_stats() 
                                 quit() 
 
                 if choice1 == '2':
@@ -718,11 +725,16 @@ class Game():
                     Game.line() 
                     txt2 = "You have turned away from the path of destiny. The Forgotten Realm remains in chaos, the kings' essences lost, and peace out of reach. Perhaps, in time, you'll reconsider. For now, the realm awaits your decision..."
                     Game.clear()
+                    Game.line() 
+                    Game.slow_print(txt2)
+                    Game.clear()
+                    Game.line() 
                     t1 = f.renderText(f"Goodbye {self.player.name}")
                     t2 = colored(t1, "red" , attrs=['bold'])
                     print(t2)
-
-                    Game.slow_print(txt2)
+                    Game.line()
+                    print(f"{self.player.name} The Forgetten stats:")
+                    self.print_stats() 
                     quit()
             
             game_loop = False
@@ -735,6 +747,11 @@ class Game():
         End2 = colored(End, "red" , attrs=['bold'])
         print(End2)
 
+    def print_stats(self):
+        print(f"{self.player.name}'s level - {self.player.level}")
+        print(f"{self.player.name}'s strenght - {self.player.strength}")
+        print(f"{self.player.name}'s king's fragments - {self.player.essence}")
+        print(f"{self.player.name}'s money - {self.player.money}")
 
 
 Game1 = Game()

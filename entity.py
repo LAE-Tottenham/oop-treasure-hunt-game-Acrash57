@@ -28,7 +28,7 @@ class Player(Entity):
         self.inventory_max_weight = 25
         self.inventory = []
         self.pos = [0,0]
-        self.money = 75
+        self.money = 0
         self.marker = player_icon
         self.weapon = given_weapon
     
